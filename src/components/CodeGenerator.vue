@@ -2,9 +2,25 @@
   <div class="hello">
     <h2><code>{{ pascal }}.java</code></h2>
 <pre v-highlightjs>
-<code class="java">@Table(name = "{{ snake }}")</code>
-<code class="java">public class {{ pascal }} {</code>
+<code class="java">package {{ basePackage }}.entity;</code>
 <code class="java"></code>
+<code class="java">import lombok.AllArgsConstructor;</code>
+<code class="java">import lombok.Data;</code>
+<code class="java">import lombok.NoArgsConstructor;</code>
+<code class="java"></code>
+<code class="java">import javax.persistence.*;</code>
+<code class="java">import java.io.Serializable;</code>
+<code class="java"></code>
+<code class="java">@Entity</code>
+<code class="java">@Table(name = "{{ snake }}")</code>
+<code class="java">@Data</code>
+<code class="java">@AllArgsConstructor</code>
+<code class="java">@NoArgsConstructor</code>
+<code class="java">public class {{ pascal }} implements Serializable {</code>
+<code class="java">    @Id</code>
+<code class="java">    @GeneratedValue</code>
+<code class="java">    private {{ entity.idType }} id;</code>
+<code class="java" v-for="field in entity.fields" :key="field"><br/>    private {{ field.type }} {{ field.name }};</code>
 <code class="java">}</code>
 <code class="java"></code>
 </pre>
@@ -15,8 +31,10 @@
 export default {
   name: 'CodeGenerator',
   props: {
+    basePackage: String,
     snake: String,
     pascal: String,
+    entity: Object,
   },
 }
 </script>
