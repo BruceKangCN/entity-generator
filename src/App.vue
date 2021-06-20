@@ -27,14 +27,20 @@ export default {
     return {
       symbol: "table name",
       basePackage: "",
-      snakeCase: "table_name",
-      pascalCase: "TableName",
       newField: {type: '', name: ''},
       entity: {
         idType: "Integer",
         fields: [],
       },
     }
+  },
+  computed: {
+    snakeCase() {
+      return snakeCase(this.symbol)
+    },
+    pascalCase() {
+      return pascalCase(this.symbol)
+    },
   },
   methods: {
     updateCases() {
