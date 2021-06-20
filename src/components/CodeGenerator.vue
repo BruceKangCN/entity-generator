@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
     <h2><code>{{ pascal }}.java</code></h2>
-<pre v-highlightjs>
+<pre v-highlightjs id="entity-java">
 <code class="java">package {{ basePackage }}.entity;</code>
 <code class="java"></code>
 <code class="java">import lombok.AllArgsConstructor;</code>

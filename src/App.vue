@@ -11,6 +11,7 @@
     <input type="button" value="-" @click="removeField(index)" />
   </div>
   <code-generator :basePackage="basePackage" :snake="snakeCase" :pascal="pascalCase" :entity="entity" />
+  <input type="button" value="download" @click="download" />
 </template>
 
 <script>
@@ -46,6 +47,13 @@ export default {
     },
     removeField(index) {
       this.entity.fields.splice(index, 1)
+    },
+    download() {
+      let el = document.createElement('a')
+      const src = document.querySelector('#entity-java').innerText
+      el.setAttribute('href', 'data:text/plain;charset=utf8,' + src)
+      el.setAttribute('download', this.pascalCase + '.java')
+      el.click()
     },
   },
 }
