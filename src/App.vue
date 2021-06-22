@@ -155,6 +155,10 @@ export default {
       el.click()
     },
   },
+  // 生产环境时，在应用创建时从后端获取字典
+  // setup() {
+  //   // 获取字典相关代码
+  // },
 }
 </script>
 
@@ -171,12 +175,13 @@ label {
   display: inline-block;
   width: 100px;
 }
-/* 将用于展示字段的<p>的margin设置为0px */
-p.field {
-  margin: 0px;
-}
+/* 将各种输入组件长度固定，便于对齐元素 */
 select,
 input[type=text] {
   width: 150px;
+}
+/* 将用于展示字段的<p>的margin设置为0px */
+p.field {
+  margin: 0px;
 }
 </style>
