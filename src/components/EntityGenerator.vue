@@ -23,7 +23,6 @@
 <code class="java">    private {{ entity.idType }} id;</code>
 <code class="java" v-for="field in entity.fields" :key="field"><br/>    private {{ field.type }} {{ field.name }};</code>
 <code class="java">}</code>
-<code class="java"></code>
 </pre>
 </template>
 

@@ -75,13 +75,15 @@ export default {
     // 下载源代码文件功能
     download() {
       // 新建<a>元素
-      let el = document.createElement('a')
+      const el = document.createElement('a')
       // 获取pre#entity-java中的源代码文本
       const src = document.querySelector('#entity-java').innerText
-      // 将数据类型设置为纯文本，编码UTF-8，内容为上一步获取到的源代码文本
-      el.setAttribute('href', 'data:text/plain;charset=utf8,' + src)
+      // 将数据类型设置为纯文本，编码为base64，内容为上一步获取到的源代码文本
+      // 使用btoa(src)将源代码文本编码为base64格式，
+      // 可以保留编码格式、换行符格式、末尾换行符
+      el.href = 'data:text/plain;base64,' + btoa(src)
       // 设置下载文件名为`${this.pascalCae}.java`
-      el.setAttribute('download', this.pascalCase + '.java')
+      el.download = this.pascalCase + '.java'
       // 触发<a>的点击事件
       el.click()
     },
