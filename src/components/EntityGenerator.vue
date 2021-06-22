@@ -29,7 +29,7 @@
 
 <script>
 export default {
-  name: 'CodeGenerator',
+  name: 'EntinyGenerator',
   props: {
     basePackage: String,
     snake: String,

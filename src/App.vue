@@ -20,19 +20,19 @@
     </p>
   </div>
   <!-- 代码生成器 -->
-  <code-generator :basePackage="basePackage" :snake="snakeCase" :pascal="pascalCase" :entity="entity" />
+  <entity-generator :basePackage="basePackage" :snake="snakeCase" :pascal="pascalCase" :entity="entity" />
   <!-- 下载源文件按钮 -->
   <input type="button" value="download" @click="download" />
 </template>
 
 <script>
-import CodeGenerator from './components/CodeGenerator.vue' // 代码生成器组件
+import EntityGenerator from './components/EntityGenerator.vue' // 代码生成器组件
 import { snakeCase, pascalCase } from 'change-case' // 命名法转换框架
 
 export default {
   name: 'App',
   components: {
-    CodeGenerator, // 代码生成器
+    EntityGenerator, // 代码生成器
   },
   data() {
     return {
