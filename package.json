@@ -1,5 +1,7 @@
 {
   "name": "entity-generator",
+  "repository": "https://github.com/BruceKangCN/entity-generator.git",
+  "license": "MIT",
   "version": "0.1.0",
   "private": true,
   "scripts": {
