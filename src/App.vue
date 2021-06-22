@@ -13,7 +13,7 @@
   <div>
     <h2>ID Field</h2>
     <label for="">Type:</label>
-    <select type="text" v-model="entity.id.type">
+    <select type="text" v-model="id.type">
       <option
         v-for="item in idDict"
         :key="item.id"
@@ -23,7 +23,7 @@
       </option>
     </select>
     <label for="">Name:</label>
-    <input type="text" v-model="entity.id.name" />
+    <input type="text" v-model="id.name" />
     <br/>
   </div>
   <!-- 添加字段div -->
@@ -61,8 +61,8 @@
   <code-generator
     :basePackage="basePackage"
     :symbol="symbol"
+    :id="id"
     :fields="fields"
-    :entity="entity"
   />
 </template>
 
@@ -80,11 +80,9 @@ export default {
       basePackage: '',
       newField: {type: '', name: ''},
       fields: [],
-      entity: {
-        id: {
+      id: {
           type: 'Integer',
           name: 'id',
-        },
       },
       // 主键类型字典，生产环境时从后端获取
       idDict: [
@@ -114,7 +112,7 @@ export default {
     }
   },
   methods: {
-    // 通过向entity.fields数组添加元素，新增字段
+    // 通过向fields数组添加元素，新增字段
     addField() {
       // 空字段检测
       if (this.newField.type === '' || this.newField.name === '') {
