@@ -5,7 +5,7 @@
     <label for="">Name:</label>
     <input type="text" v-model="symbol" @input="updateCases" /><br/>
     <label for="">Package:</label>
-    <input type="text" v-model="basePackage" />.entity<br/>
+    <input type="text" v-model="basePackage" /><br/>
   </div>
   <!-- 实体类主键div -->
   <div>
@@ -55,6 +55,10 @@
       <input type="button" value="-" @click="removeField(index)" />
     </p>
   </div>
+  <!-- 下载源文件按钮 -->
+  <h2>Download</h2>
+  <input type="button" value="entity" @click="download(0)" />
+  <input type="button" value="repository" @click="download(1)" />
   <h2>Source code</h2>
   <!-- 实体类生成器 -->
   <entity-generator
@@ -63,8 +67,6 @@
     :pascal="pascalCase"
     :entity="entity"
   />
-  <!-- 下载源文件按钮 -->
-  <input type="button" value="download" @click="download" />
 </template>
 
 <script>
@@ -139,18 +141,29 @@ export default {
       this.fields.splice(index, 1)
       this.entity.fields.splice(index, 1)
     },
-    // 下载源代码文件功能
-    download() {
+    // 下载源代码文件功能，通过index指定要下载的文件
+    download(index) {
       // 新建<a>元素
       const el = document.createElement('a')
-      // 获取pre#entity-java中的源代码文本
-      const src = document.querySelector('#entity-java').innerText
+      // 设置下载文件名
+      switch (index) {
+      case 0:
+        el.download = this.pascalCase + '.java'
+        break
+      case 1:
+        el.download = this.pascalCase + 'Repository.java'
+        break
+      default:
+        return
+      }
+      // 获取代码块列表
+      const files = document.querySelectorAll('div.code-block')
+      // 获取指定索引代码块中的源代码文本
+      const src = files[index].innerText
       // 将数据类型设置为纯文本，编码为base64，内容为上一步获取到的源代码文本
       // 使用btoa(src)将源代码文本编码为base64格式，
       // 可以保留编码格式、换行符格式、末尾换行符
       el.href = 'data:text/plain;base64,' + btoa(src)
-      // 设置下载文件名为`${this.pascalCae}.java`
-      el.download = this.pascalCase + '.java'
       // 触发<a>的点击事件
       el.click()
     },
