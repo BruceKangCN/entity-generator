@@ -13,7 +13,7 @@
   <div>
     <h2>ID Field</h2>
     <label for="">Type:</label>
-    <select type="text" v-model="id.type">
+    <select type="text" v-model="entityId.type">
       <option
         v-for="item in idDict"
         :key="item.id"
@@ -23,7 +23,7 @@
       </option>
     </select>
     <label for="">Name:</label>
-    <input type="text" v-model="id.name" />
+    <input type="text" v-model="entityId.name" />
     <br/>
   </div>
   <!-- 添加字段div -->
@@ -61,7 +61,7 @@
   <code-generator
     :basePackage="basePackage"
     :symbol="symbol"
-    :id="id"
+    :entityId="entityId"
     :fields="fields"
   />
 </template>
@@ -80,7 +80,7 @@ export default {
       basePackage: '',
       newField: {type: '', name: ''},
       fields: [],
-      id: {
+      entityId: {
           type: 'Integer',
           name: 'id',
       },

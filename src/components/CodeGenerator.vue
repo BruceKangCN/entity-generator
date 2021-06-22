@@ -4,7 +4,7 @@
   <input type="button" value="entity" @click="download(0)" />
   <input type="button" value="repository" @click="download(1)" />
   <h2>Source code</h2>
-  <!-- 文件名 -->
+  <!-- 实体类 -->
   <h3><code>{{ pascal }}.java</code></h3>
   <!-- TODO 添加外键字段 -->
   <!-- 代码块，需将每一行都拆分为<pre>，否则会有多余缩进 -->
@@ -16,11 +16,11 @@
     <pre v-highlightjs><code class="java">&#10;import lombok.AllArgsConstructor;</code></pre>
     <pre v-highlightjs><code class="java">import lombok.Data;</code></pre>
     <pre v-highlightjs><code class="java">import lombok.NoArgsConstructor;</code></pre>
-    <pre v-highlightjs><code class="java" v-if="id.type === 'UUID'">import org.hibernate.annotations.GenericGenerator;</code></pre>
+    <pre v-highlightjs><code class="java" v-if="entityId.type === 'UUID'">import org.hibernate.annotations.GenericGenerator;</code></pre>
     <!-- 空行，换行符见下一行 -->
     <pre v-highlightjs><code class="java">&#10;import javax.persistence.*;</code></pre>
     <pre v-highlightjs><code class="java">import java.io.Serializable;</code></pre>
-    <pre v-highlightjs><code class="java" v-if="id.type === 'UUID'">import java.util.UUID;</code></pre>
+    <pre v-highlightjs><code class="java" v-if="entityId.type === 'UUID'">import java.util.UUID;</code></pre>
     <!-- 空行，换行符见下一行 -->
     <pre v-highlightjs><code class="java">&#10;@Entity</code></pre>
     <pre v-highlightjs><code class="java">@Data</code></pre>
@@ -28,17 +28,18 @@
     <pre v-highlightjs><code class="java">@NoArgsConstructor</code></pre>
     <pre v-highlightjs><code class="java">public class {{ pascal }} implements Serializable {</code></pre>
     <pre v-highlightjs><code class="java">    @Id</code></pre>
-    <pre v-highlightjs><code class="java" v-if="id.type !== 'UUID'">    @GeneratedValue(strategy = GenerationType.AUTO)</code></pre>
-    <pre v-highlightjs><code class="java" v-if="id.type === 'UUID'">    @GeneratedValue(generator = “UUID”)</code></pre>
-    <pre v-highlightjs><code class="java" v-if="id.type === 'UUID'">    @GenericGenerator(</code></pre>
-    <pre v-highlightjs><code class="java" v-if="id.type === 'UUID'">        name = “UUID”,</code></pre>
-    <pre v-highlightjs><code class="java" v-if="id.type === 'UUID'">        strategy = “org.hibernate.id.UUIDGenerator”</code></pre>
-    <pre v-highlightjs><code class="java" v-if="id.type === 'UUID'">    )</code></pre>
-    <pre v-highlightjs><code class="java">    private {{ id.type }} {{ id.name }};</code></pre>
+    <pre v-highlightjs><code class="java" v-if="entityId.type !== 'UUID'">    @GeneratedValue(strategy = GenerationType.AUTO)</code></pre>
+    <pre v-highlightjs><code class="java" v-if="entityId.type === 'UUID'">    @GeneratedValue(generator = “UUID”)</code></pre>
+    <pre v-highlightjs><code class="java" v-if="entityId.type === 'UUID'">    @GenericGenerator(</code></pre>
+    <pre v-highlightjs><code class="java" v-if="entityId.type === 'UUID'">        name = “UUID”,</code></pre>
+    <pre v-highlightjs><code class="java" v-if="entityId.type === 'UUID'">        strategy = “org.hibernate.id.UUIDGenerator”</code></pre>
+    <pre v-highlightjs><code class="java" v-if="entityId.type === 'UUID'">    )</code></pre>
+    <pre v-highlightjs><code class="java">    private {{ entityId.type }} {{ entityId.name }};</code></pre>
     <pre v-highlightjs><code class="java" v-for="field in fields" :key="field">&#10;    private {{ field.type.javaType }} {{ toCamelCase(field.name) }};</code></pre>
     <pre v-highlightjs><code class="java last-line">}&#10;</code></pre>
     <!-- 空行，换行符见上一行 -->
   </div>
+  <!-- 仓库接口 -->
   <h3><code>{{ pascal }}Repository.java</code></h3>
   <!-- 注意将代码中的<>转义 -->
   <div class="code-block">
@@ -48,10 +49,10 @@
     <pre v-highlightjs><code class="java">import org.springframework.data.jpa.repository.JpaRepository;</code></pre>
     <pre v-highlightjs><code class="java">import org.springframework.stereotype.Repository;</code></pre>
     <!-- 空行，换行符见下一行 -->
-    <pre v-highlightjs><code class="java" v-if="id.type === 'UUID'">&#10;import java.util.UUID;</code></pre>
+    <pre v-highlightjs><code class="java" v-if="entityId.type === 'UUID'">&#10;import java.util.UUID;</code></pre>
     <!-- 空行，换行符见下一行 -->
     <pre v-highlightjs><code class="java">&#10;@Repository</code></pre>
-    <pre v-highlightjs><code class="java">public interface {{ pascal }}Repository extends JpaRepository&lt;{{ pascal }}, {{ id.type }}&gt; {</code></pre>
+    <pre v-highlightjs><code class="java">public interface {{ pascal }}Repository extends JpaRepository&lt;{{ pascal }}, {{ entityId.type }}&gt; {</code></pre>
     <pre v-highlightjs><code class="java last-line">}&#10;</code></pre>
     <!-- 空行，换行符见上一行 -->
   </div>
@@ -66,7 +67,7 @@ export default {
   props: {
     basePackage: String,
     symbol: String,
-    id: Object,
+    entityId: Object,
     fields: Array,
   },
   computed: {
