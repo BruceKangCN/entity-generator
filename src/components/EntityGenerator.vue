@@ -1,6 +1,7 @@
 <template>
   <!-- 文件名 -->
   <h3><code>{{ pascal }}.java</code></h3>
+  <!-- 代码块，需将每一行都拆分为<pre>，否则会有多余缩进 -->
   <!-- &#10;为<LF>换行符，需添加到下一行的行首，否则不显示 -->
   <div id="entity-java">
     <pre v-highlightjs><code class="java">package {{ basePackage }}.entity;</code></pre>
