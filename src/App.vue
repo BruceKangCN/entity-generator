@@ -3,9 +3,11 @@
   <div>
     <h2>Class Metadata</h2>
     <label for="">Name:</label>
-    <input type="text" v-model="symbol" @input="updateCases" /><br/>
+    <input type="text" v-model="symbol" @input="updateCases" />
+    <br/>
     <label for="">Package:</label>
-    <input type="text" v-model="basePackage" /><br/>
+    <input type="text" v-model="basePackage" />
+    <br/>
   </div>
   <!-- 实体类主键div -->
   <div>
@@ -31,10 +33,9 @@
     <label for="type">Type:</label>
     <select type="text" v-model="newField.type">
       <option
-        v-for="item in fieldDict"
+        v-for="item in filteredFieldDict"
         :key="item.id"
         :value="item"
-        v-show="true"
       >
         {{ item.name }}
       </option>
@@ -55,61 +56,70 @@
       <input type="button" value="-" @click="removeField(index)" />
     </p>
   </div>
+  <!-- TODO 添加、展示外键 -->
   <!-- 下载源文件按钮 -->
   <h2>Download</h2>
   <input type="button" value="entity" @click="download(0)" />
   <input type="button" value="repository" @click="download(1)" />
   <h2>Source code</h2>
   <!-- 实体类生成器 -->
-  <entity-generator
+  <code-generator
     :basePackage="basePackage"
-    :snake="snakeCase"
     :pascal="pascalCase"
     :entity="entity"
   />
 </template>
 
 <script>
-import EntityGenerator from './components/EntityGenerator.vue' // 代码生成器组件
-import { snakeCase, pascalCase, camelCase } from 'change-case' // 命名法转换框架
+import CodeGenerator from './components/CodeGenerator.vue' // 代码生成器组件
+import { pascalCase, camelCase } from 'change-case' // 命名法转换框架
 
 export default {
   name: 'App',
   components: {
-    EntityGenerator, // 代码生成器
+    CodeGenerator, // 代码生成器
   },
   data() {
     return {
-      symbol: "table name",
-      basePackage: "",
+      symbol: 'table name',
+      basePackage: '',
       newField: {type: '', name: ''},
       fields: [],
       entity: {
         id: {
-          type: "Integer",
-          name: "id",
+          type: 'Integer',
+          name: 'id',
         },
         fields: [],
       },
       // 主键类型字典，生产环境时从后端获取
       idDict: [
-        { id: 0, dbType: "int", javaType: "Integer" },
-        { id: 1, dbType: "bigint", javaType: "Long" },
-        { id: 2, dbType: "UUID", javaType: "UUID" },
+        { id: 0, dbType: 'int', javaType: 'Integer' },
+        { id: 1, dbType: 'bigint', javaType: 'Long' },
+        { id: 2, dbType: 'UUID', javaType: 'UUID' },
       ],
       // 字段类型字典，生产环境时从后端获取
       fieldDict: [
-        { id: 0, name: 'count', dbType: "bigint", length: 10, precision: null, javaType: "Long" },
-        { id: 1, name: 'price', dbType: "decimal", length: 15, precision: 2 , javaType: "Double" },
-        { id: 2, name: 'name', dbType: "varchar", length: 100, precision: null, javaType: "String" },
+        { id: 0, name: 'count', dbType: 'bigint', length: 10, precision: null, javaType: 'Long' },
+        { id: 1, name: 'price', dbType: 'decimal', length: 15, precision: 2 , javaType: 'Double' },
+        { id: 2, name: 'name', dbType: 'varchar', length: 100, precision: null, javaType: 'String' },
+      ],
+      // TODO 实现过滤
+      // 过滤后的字段类型字典，初始值应与fieldDict相同
+      filteredFieldDict: [
+        { id: 0, name: 'count', dbType: 'bigint', length: 10, precision: null, javaType: 'Long' },
+        { id: 1, name: 'price', dbType: 'decimal', length: 15, precision: 2 , javaType: 'Double' },
+        { id: 2, name: 'name', dbType: 'varchar', length: 100, precision: null, javaType: 'String' },
+      ],
+      // 表名列表，用于添加外键，生产环境时从后端获取
+      tables: [
+        { table: 'user', entity: 'User'},
+        { table: 'city', entity: 'City' },
+        { table: 'personal_business', entity: 'PersonalBusiness' },
       ],
     }
   },
   computed: {
-    // 将symbol转换为snake_case，用于表名
-    snakeCase() {
-      return snakeCase(this.symbol)
-    },
     // 将symbol转换为PascalCase，用于类名
     pascalCase() {
       return pascalCase(this.symbol)
@@ -118,7 +128,6 @@ export default {
   methods: {
     // 当输入的symbol变化时，自动更新其他命名法对应的文本
     updateCases() {
-      this.snakeCase = snakeCase(this.symbol)
       this.pascalCase = pascalCase(this.symbol)
     },
     // 通过向entity.fields数组添加元素，新增字段
@@ -140,6 +149,12 @@ export default {
       // 将对应index的数组元素移除
       this.fields.splice(index, 1)
       this.entity.fields.splice(index, 1)
+    },
+    // TODO 实现过滤器
+    // 过滤器
+    filter() {
+      let filtered = []
+      this.filteredFieldDict = filtered
     },
     // 下载源代码文件功能，通过index指定要下载的文件
     download(index) {
@@ -168,9 +183,9 @@ export default {
       el.click()
     },
   },
-  // 生产环境时，在应用创建时从后端获取字典
+  // 生产环境时，在应用创建时从后端获取字典、表名
   // setup() {
-  //   // 获取字典相关代码
+  //   // 相关代码
   // },
 }
 </script>

@@ -3,6 +3,7 @@
   <h3><code>{{ pascal }}.java</code></h3>
   <!-- 代码块，需将每一行都拆分为<pre>，否则会有多余缩进 -->
   <!-- &#10;为<LF>换行符，需添加到下一行的行首，否则不显示 -->
+  <!-- 表名、字段名均为自动生成，若要手动指定，需在代码中添加@Table、@Column注解 -->
   <div class="code-block">
     <pre v-highlightjs><code class="java">package {{ basePackage }}.entity;</code></pre>
     <!-- 空行，换行符见下一行 -->
@@ -16,7 +17,6 @@
     <pre v-highlightjs><code class="java" v-if="entity.id.type === 'UUID'">import java.util.UUID;</code></pre>
     <!-- 空行，换行符见下一行 -->
     <pre v-highlightjs><code class="java">&#10;@Entity</code></pre>
-    <pre v-highlightjs><code class="java">@Table(name = "{{ snake }}")</code></pre>
     <pre v-highlightjs><code class="java">@Data</code></pre>
     <pre v-highlightjs><code class="java">@AllArgsConstructor</code></pre>
     <pre v-highlightjs><code class="java">@NoArgsConstructor</code></pre>
@@ -56,7 +56,6 @@ export default {
   name: 'EntinyGenerator',
   props: {
     basePackage: String,
-    snake: String,
     pascal: String,
     entity: Object,
   },
