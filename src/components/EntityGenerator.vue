@@ -3,7 +3,7 @@
   <h3><code>{{ pascal }}.java</code></h3>
   <!-- 代码块，需将每一行都拆分为<pre>，否则会有多余缩进 -->
   <!-- &#10;为<LF>换行符，需添加到下一行的行首，否则不显示 -->
-  <div id="entity-java" class="code-block">
+  <div class="code-block">
     <pre v-highlightjs><code class="java">package {{ basePackage }}.entity;</code></pre>
     <!-- 空行，换行符见下一行 -->
     <pre v-highlightjs><code class="java">&#10;import lombok.AllArgsConstructor;</code></pre>
@@ -35,7 +35,7 @@
   </div>
   <h3><code>{{ pascal }}Repository.java</code></h3>
   <!-- 注意将代码中的<>转义 -->
-  <div id="repo-java" class="code-block">
+  <div class="code-block">
     <pre v-highlightjs><code class="java">package {{ basePackage }}.repo;</code></pre>
     <!-- 空行，换行符见下一行 -->
     <pre v-highlightjs><code class="java">&#10;import {{ basePackage }}.entity.{{ pascal }};</code></pre>

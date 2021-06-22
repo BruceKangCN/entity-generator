@@ -145,7 +145,7 @@ export default {
     download(index) {
       // 新建<a>元素
       const el = document.createElement('a')
-      // 设置下载文件名
+      // 设置文件名
       switch (index) {
       case 0:
         el.download = this.pascalCase + '.java'
