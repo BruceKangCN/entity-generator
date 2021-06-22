@@ -1,25 +1,49 @@
 <template>
   <!-- 实体类元数据div -->
   <div>
-    <label for="">Name:</label><input type="text" v-model="symbol" @input="updateCases" /><br/>
-    <label for="">Package:</label><input type="text" v-model="basePackage" />.entity<br/>
-    <label for="">ID type:</label><input type="text" v-model="entity.idType" /><br/>
+    <h2>Class Metadata</h2>
+    <label for="">Name:</label>
+    <input type="text" v-model="symbol" @input="updateCases" /><br/>
+    <label for="">Package:</label>
+    <input type="text" v-model="basePackage" />.entity<br/>
+  </div>
+  <!-- 实体类主键div -->
+  <div>
+    <h2>ID type</h2>
+    <label for="">ID type:</label>
+    <select type="text" v-model="entity.id.type">
+      <option v-for="(item, index) in idDict" :key="index" :value="item.javaType">{{ item.dbType }}</option>
+    </select>
+    <label for="">ID name:</label>
+    <input type="text" v-model="entity.id.name" />
+    <br/>
   </div>
   <!-- 添加字段div -->
   <div>
-    <label for="type">Type:</label><input type="text" v-model="newField.type" />
-    <label for="name">Name:</label><input type="text" v-model="newField.name" />
-    <input type="button" value="Add field" @click="addField" /><br/>
+    <h2>New field</h2>
+    <!-- TODO 添加过滤器 -->
+    <label for="type">Type:</label>
+    <select type="text" v-model="newField.type">
+      <option v-for="(item, index) in fieldDict" :key="index" :value="item">{{ item.name }}</option>
+    </select>
+    <label for="name">Name:</label>
+    <input type="text" v-model="newField.name" />
+    <input type="button" value="Add field" @click="addField" />
+    <br/>
   </div>
   <!-- 展示字段div -->
   <div>
-    <p class="field" v-for="(field, index) in entity.fields" :key="index">
-      <label for="type">Type:</label><input type="text" v-model="field.type" readonly />
-      <label for="name">Name:</label><input type="text" v-model="field.name" readonly />
+    <h2>Fields</h2>
+    <p class="field" v-for="(field, index) in fields" :key="index">
+      <label for="type">Type:</label>
+      <input type="text" :value="field.type.name" readonly />
+      <label for="name">Name:</label>
+      <input type="text" :value="field.name" readonly />
       <input type="button" value="-" @click="removeField(index)" />
     </p>
   </div>
-  <!-- 代码生成器 -->
+  <h2>Source code</h2>
+  <!-- 实体类生成器 -->
   <entity-generator :basePackage="basePackage" :snake="snakeCase" :pascal="pascalCase" :entity="entity" />
   <!-- 下载源文件按钮 -->
   <input type="button" value="download" @click="download" />
@@ -27,7 +51,7 @@
 
 <script>
 import EntityGenerator from './components/EntityGenerator.vue' // 代码生成器组件
-import { snakeCase, pascalCase } from 'change-case' // 命名法转换框架
+import { snakeCase, pascalCase, camelCase } from 'change-case' // 命名法转换框架
 
 export default {
   name: 'App',
@@ -39,10 +63,26 @@ export default {
       symbol: "table name",
       basePackage: "",
       newField: {type: '', name: ''},
+      fields: [],
       entity: {
-        idType: "Integer",
+        id: {
+          type: "Integer",
+          name: "id",
+        },
         fields: [],
       },
+      // 主键类型字典，生产环境时从后端获取
+      idDict: [
+        { dbType: "int", javaType: "Integer" },
+        { dbType: "bigint", javaType: "Long" },
+        { dbType: "UUID", javaType: "UUID" },
+      ],
+      // 字段类型字典，生产环境时从后端获取
+      fieldDict: [
+        { name: 'count', dbType: "bigint", length: [10, null], javaType: "Long" },
+        { name: 'price', dbType: "decimal", length: [15, 2] , javaType: "Double" },
+        { name: 'name', dbType: "varchar", length: [100, null], javaType: "String" },
+      ],
     }
   },
   computed: {
@@ -63,13 +103,22 @@ export default {
     },
     // 通过向entity.fields数组添加元素，新增字段
     addField() {
-      this.entity.fields.push({type: this.newField.type, name: this.newField.name})
+      // 空字段检测
+      if (this.newField.type === '' || this.newField.name === '') {
+        return
+      }
+      // 获取新字段
+      const field = { type: this.newField.type, name: this.newField.name }
+      // 将字段对应信息存入对应数组
+      this.fields.push(field)
+      this.entity.fields.push({type: field.type.javaType, name: camelCase(field.name)})
       // 更新字段后，将新增字段输入框重置
       this.newField = {type: '', name: ''}
     },
     // 通过index删除对应的字段
     removeField(index) {
       // 将对应index的数组元素移除
+      this.fields.splice(index, 1)
       this.entity.fields.splice(index, 1)
     },
     // 下载源代码文件功能
@@ -107,5 +156,9 @@ label {
 /* 将用于展示字段的<p>的margin设置为0px */
 p.field {
   margin: 0px;
+}
+select,
+input[type=text] {
+  width: 150px;
 }
 </style>
