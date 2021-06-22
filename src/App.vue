@@ -9,12 +9,18 @@
   </div>
   <!-- 实体类主键div -->
   <div>
-    <h2>ID type</h2>
-    <label for="">ID type:</label>
+    <h2>ID Field</h2>
+    <label for="">Type:</label>
     <select type="text" v-model="entity.id.type">
-      <option v-for="(item, index) in idDict" :key="index" :value="item.javaType">{{ item.dbType }}</option>
+      <option
+        v-for="item in idDict"
+        :key="item.id"
+        :value="item.javaType"
+      >
+        {{ item.dbType }}
+      </option>
     </select>
-    <label for="">ID name:</label>
+    <label for="">Name:</label>
     <input type="text" v-model="entity.id.name" />
     <br/>
   </div>
@@ -24,7 +30,14 @@
     <!-- TODO 添加过滤器 -->
     <label for="type">Type:</label>
     <select type="text" v-model="newField.type">
-      <option v-for="(item, index) in fieldDict" :key="index" :value="item">{{ item.name }}</option>
+      <option
+        v-for="item in fieldDict"
+        :key="item.id"
+        :value="item"
+        v-show="true"
+      >
+        {{ item.name }}
+      </option>
     </select>
     <label for="name">Name:</label>
     <input type="text" v-model="newField.name" />
@@ -44,7 +57,12 @@
   </div>
   <h2>Source code</h2>
   <!-- 实体类生成器 -->
-  <entity-generator :basePackage="basePackage" :snake="snakeCase" :pascal="pascalCase" :entity="entity" />
+  <entity-generator
+    :basePackage="basePackage"
+    :snake="snakeCase"
+    :pascal="pascalCase"
+    :entity="entity"
+  />
   <!-- 下载源文件按钮 -->
   <input type="button" value="download" @click="download" />
 </template>
@@ -73,15 +91,15 @@ export default {
       },
       // 主键类型字典，生产环境时从后端获取
       idDict: [
-        { dbType: "int", javaType: "Integer" },
-        { dbType: "bigint", javaType: "Long" },
-        { dbType: "UUID", javaType: "UUID" },
+        { id: 0, dbType: "int", javaType: "Integer" },
+        { id: 1, dbType: "bigint", javaType: "Long" },
+        { id: 2, dbType: "UUID", javaType: "UUID" },
       ],
       // 字段类型字典，生产环境时从后端获取
       fieldDict: [
-        { name: 'count', dbType: "bigint", length: [10, null], javaType: "Long" },
-        { name: 'price', dbType: "decimal", length: [15, 2] , javaType: "Double" },
-        { name: 'name', dbType: "varchar", length: [100, null], javaType: "String" },
+        { id: 0, name: 'count', dbType: "bigint", length: 10, precision: null, javaType: "Long" },
+        { id: 1, name: 'price', dbType: "decimal", length: 15, precision: 2 , javaType: "Double" },
+        { id: 2, name: 'name', dbType: "varchar", length: 100, precision: null, javaType: "String" },
       ],
     }
   },
