@@ -1,4 +1,9 @@
 <template>
+  <!-- 下载源文件按钮 -->
+  <h2>Download</h2>
+  <input type="button" value="entity" @click="download(0)" />
+  <input type="button" value="repository" @click="download(1)" />
+  <h2>Source code</h2>
   <!-- 文件名 -->
   <h3><code>{{ pascal }}.java</code></h3>
   <!-- 代码块，需将每一行都拆分为<pre>，否则会有多余缩进 -->
@@ -29,7 +34,7 @@
     <pre v-highlightjs><code class="java" v-if="entity.id.type === 'UUID'">        strategy = “org.hibernate.id.UUIDGenerator”</code></pre>
     <pre v-highlightjs><code class="java" v-if="entity.id.type === 'UUID'">    )</code></pre>
     <pre v-highlightjs><code class="java">    private {{ entity.id.type }} {{ entity.id.name }};</code></pre>
-    <pre v-highlightjs><code class="java" v-for="field in entity.fields" :key="field">&#10;    private {{ field.type }} {{ field.name }};</code></pre>
+    <pre v-highlightjs><code class="java" v-for="field in fields" :key="field">&#10;    private {{ field.type.javaType }} {{ toCamelCase(field.name) }};</code></pre>
     <pre v-highlightjs><code class="java last-line">}&#10;</code></pre>
     <!-- 空行，换行符见上一行 -->
   </div>
@@ -52,13 +57,62 @@
 </template>
 
 <script>
+import { pascalCase, camelCase } from 'change-case' // 命名法转换框架
+
 export default {
   name: 'EntinyGenerator',
   props: {
     basePackage: String,
-    pascal: String,
+    symbol: String,
+    fields: Array,
     entity: Object,
   },
+  computed: {
+    // 将symbol转换为PascalCase，用于类名
+    pascal() {
+      return pascalCase(this.symbol)
+    },
+    // 将symbol转换为camelCase，用于变量名
+    camel() {
+      return camelCase(this.symbol)
+    },
+    // 将symbol转换为snake_case，用于表名
+    snake() {
+      return camelCase(this.symbol)
+    },
+  },
+  methods: {
+    // 将字符串转换为camelCase
+    toCamelCase (str) {
+      return camelCase(str)
+    },
+    // 下载源代码文件功能，通过index指定要下载的文件
+    download(index) {
+      // 新建<a>元素
+      const el = document.createElement('a')
+      // 设置文件名
+      switch (index) {
+      case 0:
+        el.download = this.pascal + '.java'
+        break
+      case 1:
+        el.download = this.pascal + 'Repository.java'
+        break
+      default:
+        return
+      }
+      // 获取代码块列表
+      const files = document.querySelectorAll('div.code-block')
+      // 获取指定索引代码块中的源代码文本
+      const src = files[index].innerText
+      // 将数据类型设置为纯文本，编码为base64，内容为上一步获取到的源代码文本
+      // 使用btoa(src)将源代码文本编码为base64格式，
+      // 可以保留编码格式、换行符格式、末尾换行符
+      el.href = 'data:text/plain;base64,' + btoa(src)
+      // 触发<a>的点击事件
+      el.click()
+    },
+  }
 }
 </script>
 

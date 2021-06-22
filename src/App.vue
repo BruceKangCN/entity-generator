@@ -57,22 +57,17 @@
     </p>
   </div>
   <!-- TODO 添加、展示外键 -->
-  <!-- 下载源文件按钮 -->
-  <h2>Download</h2>
-  <input type="button" value="entity" @click="download(0)" />
-  <input type="button" value="repository" @click="download(1)" />
-  <h2>Source code</h2>
   <!-- 实体类生成器 -->
   <code-generator
     :basePackage="basePackage"
-    :pascal="pascalCase"
+    :symbol="symbol"
+    :fields="fields"
     :entity="entity"
   />
 </template>
 
 <script>
 import CodeGenerator from './components/CodeGenerator.vue' // 代码生成器组件
-import { pascalCase, camelCase } from 'change-case' // 命名法转换框架
 
 export default {
   name: 'App',
@@ -90,7 +85,6 @@ export default {
           type: 'Integer',
           name: 'id',
         },
-        fields: [],
       },
       // 主键类型字典，生产环境时从后端获取
       idDict: [
@@ -119,17 +113,7 @@ export default {
       ],
     }
   },
-  computed: {
-    // 将symbol转换为PascalCase，用于类名
-    pascalCase() {
-      return pascalCase(this.symbol)
-    },
-  },
   methods: {
-    // 当输入的symbol变化时，自动更新其他命名法对应的文本
-    updateCases() {
-      this.pascalCase = pascalCase(this.symbol)
-    },
     // 通过向entity.fields数组添加元素，新增字段
     addField() {
       // 空字段检测
@@ -137,10 +121,9 @@ export default {
         return
       }
       // 获取新字段
-      const field = { type: this.newField.type, name: this.newField.name }
+      const field = this.newField
       // 将字段对应信息存入对应数组
       this.fields.push(field)
-      this.entity.fields.push({type: field.type.javaType, name: camelCase(field.name)})
       // 更新字段后，将新增字段输入框重置
       this.newField = {type: '', name: ''}
     },
@@ -148,39 +131,12 @@ export default {
     removeField(index) {
       // 将对应index的数组元素移除
       this.fields.splice(index, 1)
-      this.entity.fields.splice(index, 1)
     },
     // TODO 实现过滤器
     // 过滤器
     filter() {
       let filtered = []
       this.filteredFieldDict = filtered
-    },
-    // 下载源代码文件功能，通过index指定要下载的文件
-    download(index) {
-      // 新建<a>元素
-      const el = document.createElement('a')
-      // 设置文件名
-      switch (index) {
-      case 0:
-        el.download = this.pascalCase + '.java'
-        break
-      case 1:
-        el.download = this.pascalCase + 'Repository.java'
-        break
-      default:
-        return
-      }
-      // 获取代码块列表
-      const files = document.querySelectorAll('div.code-block')
-      // 获取指定索引代码块中的源代码文本
-      const src = files[index].innerText
-      // 将数据类型设置为纯文本，编码为base64，内容为上一步获取到的源代码文本
-      // 使用btoa(src)将源代码文本编码为base64格式，
-      // 可以保留编码格式、换行符格式、末尾换行符
-      el.href = 'data:text/plain;base64,' + btoa(src)
-      // 触发<a>的点击事件
-      el.click()
     },
   },
   // 生产环境时，在应用创建时从后端获取字典、表名
