@@ -1,6 +1,7 @@
 <template>
-  <div class="hello">
-    <h2><code>{{ pascal }}.java</code></h2>
+  <!-- 文件名 -->
+  <h2><code>{{ pascal }}.java</code></h2>
+<!-- 标签前不添加缩进，否则代码块内容会出现多余缩进 -->
 <pre v-highlightjs id="entity-java">
 <code class="java">package {{ basePackage }}.entity;</code>
 <code class="java"></code>
@@ -24,7 +25,6 @@
 <code class="java">}</code>
 <code class="java"></code>
 </pre>
-  </div>
 </template>
 
 <script>
