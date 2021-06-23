@@ -35,7 +35,8 @@
     <pre v-highlightjs><code class="java" v-if="entityId.type === 'UUID'">        strategy = “org.hibernate.id.UUIDGenerator”</code></pre>
     <pre v-highlightjs><code class="java" v-if="entityId.type === 'UUID'">    )</code></pre>
     <pre v-highlightjs><code class="java">    private {{ entityId.type }} {{ entityId.name }};</code></pre>
-    <pre v-highlightjs><code class="java" v-for="field in fields" :key="field">&#10;    private {{ field.type.javaType }} {{ toCamelCase(field.name) }};</code></pre>
+    <pre v-highlightjs><code class="java" v-for="(field, index) in fields" :key="index">&#10;    private {{ field.type.javaType }} {{ toCamelCase(field.name) }};</code></pre>
+    <pre v-highlightjs><code class="java" v-for="(foreignKey, index) in foreignKeys" :key="index">&#10;    @{{ foreignKey.type }}&#10;    private {{ foreignKey.table.entity }} {{ toCamelCase(foreignKey.table.entity) }};</code></pre>
     <pre v-highlightjs><code class="java last-line">}&#10;</code></pre>
     <!-- 空行，换行符见上一行 -->
   </div>
@@ -69,6 +70,7 @@ export default {
     symbol: String,
     entityId: Object,
     fields: Array,
+    foreignKeys: Array,
   },
   computed: {
     // 将symbol转换为PascalCase，用于类名
