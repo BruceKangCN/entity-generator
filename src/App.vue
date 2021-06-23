@@ -77,10 +77,10 @@
     <h2>Add foreign keys</h2>
     <label for="type">Type:</label>
     <select v-model="newForeignKey.type">
-      <option value="ManyToOne">Many To One</option>
-      <option value="ManyToMany">Many To Many</option>
-      <option value="OneToOne">One To One</option>
-      <option value="OneToMany">One To Many</option>
+      <option value="ManyToOne">ManyToOne</option>
+      <option value="ManyToMany">ManyToMany</option>
+      <option value="OneToOne">OneToOne</option>
+      <option value="OneToMany">OneToMany</option>
     </select>
     <label for="table">Table:</label>
     <select v-model="newForeignKey.table">
